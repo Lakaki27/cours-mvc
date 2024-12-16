@@ -126,8 +126,7 @@ class PersonnageRepository
      */
     public function delete(int $id): void
     {
-        $stmt = $this->pdo->prepare("DELETE FROM characters WHERE id = :id");
-        $stmt->execute([':id' => $id]);
+        // Implémenter
     }
 
     public function update(Personnage $character): void

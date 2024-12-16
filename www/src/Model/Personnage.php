@@ -59,12 +59,12 @@ class Personnage
 
     public function getNom(): string
     {
-        return $this->nom;
+        return strtoupper($this->nom);
     }
 
     public function setNom(string $nom): void
     {
-        $this->nom = $nom;
+        $this->nom = trim($nom);
     }
 
     public function getXp()
