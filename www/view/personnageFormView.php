@@ -10,8 +10,7 @@
             value="<?= isset($character) ? $character->getNom() : '' ?>"
             class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
     </div>
-
-    <!-- PV -->
+    <!--
     <div class="grid grid-cols-2 gap-4">
         <div>
             <label for="PV" class="block text-gray-600 font-medium mb-1">PV</label>
@@ -27,7 +26,6 @@
         </div>
     </div>
 
-    <!-- Force -->
     <div>
         <label for="force" class="block text-gray-600 font-medium mb-1">Force</label>
         <input type="number" id="force" name="force"
@@ -35,13 +33,12 @@
             class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
     </div>
 
-    <!-- Argent -->
     <div>
         <label for="money" class="block text-gray-600 font-medium mb-1">Argent</label>
         <input type="number" id="money" name="money"
             value="<?= isset($character) ? $character->getMoney() : '' ?>"
             class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
-    </div>
+    </div> -->
 
     <!-- Avatar -->
     <div>
