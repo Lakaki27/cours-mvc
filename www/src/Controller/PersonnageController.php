@@ -121,6 +121,7 @@ class PersonnageController
                 'name' => $_POST['name'],
                 'PVMax' => intval($_POST["PVMax"]),
                 'force' => intval($_POST["force"]),
+                'classe' => $_POST["classe"],
                 'avatar' => $_POST['avatar']
             ];
             
@@ -132,7 +133,11 @@ class PersonnageController
                 6, // facesDe par défaut
                 50, // chance par défaut
                 0, //money par défaut
-                basename($data['avatar']) // On ne garde que le nom du fichier (pareil ci-dessus)
+                basename($data['avatar']), // On ne garde que le nom du fichier (pareil ci-dessus)
+                0,
+                0,
+                null,
+                $data["classe"]
             );
 
             $this->repository->add($character);

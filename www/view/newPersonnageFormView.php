@@ -24,6 +24,16 @@
             class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
     </div>
 
+    <!-- Classe -->
+    <div>
+        <label for="classe" class="block text-gray-600 font-medium mb-1">Force</label>
+        <select name="classe" id="classe">
+            <option value="Personnage">Personnage</option>
+            <option value="Voleur">Voleur</option>
+            <option value="Vampire">Vampire</option>
+        </select>
+    </div>
+
     <!-- Avatar -->
     <div>
         <label for="avatar" class="block text-gray-600 font-medium mb-1">Avatar</label>

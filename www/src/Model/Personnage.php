@@ -31,7 +31,8 @@ class Personnage
         string $avatar = 'avatar.jpg',
         int $XP = 0,
         int $level = 0,
-        ?int $id = null
+        ?int $id = null,
+        string $classe = "Personnage"
     ) {
         $this->id = $id;
         $this->nom = $nom;
@@ -42,7 +43,7 @@ class Personnage
         $this->chance = $chance;
         $this->money = $money;
         $this->avatar = "/img/$avatar";
-        $this->classe = "Personnage";
+        $this->classe = $classe;
         $this->XP = $XP;
         $this->level = $level;
     }

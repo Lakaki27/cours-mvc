@@ -109,7 +109,7 @@ class BagarreController
 
         $resultat .= "----------------------------------------------------------------------\n";
 
-        $resultat .= "{$winner->getTitle()} remporte 35 pièces !";
+        $resultat .= "{$winner->getTitle()} remporte 35 pièces !\n";
 
         if ($gainedLevels > 0) {
             $resultat .= "{$winner->getTitle()} gagne {$gainedLevels} niveau(x) ! Il évolue au niveau {$winner->getLevel()} !\n";

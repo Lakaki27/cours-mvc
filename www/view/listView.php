@@ -3,6 +3,7 @@
         <tr>
             <th>ID</th>
             <th>Nom</th>
+            <th>Classe</th>
             <th>PV</th>
             <th>PVMax</th>
             <th>Force</th>
@@ -10,13 +11,13 @@
             <th>Chance</th>
             <th>XP</th>
             <th>Argent</th>
-            <th>Avatar</th>
             <th>Actions</th>
         </tr>
         <?php foreach ($characters as $char): ?>
             <tr>
                 <td><?= $char->getId() ?></td>
                 <td><?= htmlspecialchars($char->getNom()) ?></td>
+                <td><?= $char->getClasse() ?></td>
                 <td><?= $char->getPV() ?></td>
                 <td><?= $char->getPVMax() ?></td>
                 <td><?= $char->getForce() ?></td>
@@ -24,7 +25,6 @@
                 <td><?= $char->getChance() ?></td>
                 <td><?= $char->getXP() ?></td>
                 <td><?= $char->getMoney() ?></td>
-                <td><?= $char->getAvatar() ?></td>
                 <td>
                     <a href="/personnage/<?= $char->getId() ?>">Modifier</a>
                     <a class="deleteBtn" id="delete_<?= $char->getId() ?>">Supprimer</a>
