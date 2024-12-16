@@ -1,3 +1,3 @@
 <footer>
-    <p>&copy; <?= date('Y') ?> JJJ. Tous droits réservés.</p>
+    <p>&copy; <?= date('Y') ?> L.Y. Tous droits réservés.</p>
 </footer>

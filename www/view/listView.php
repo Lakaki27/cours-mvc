@@ -16,17 +16,17 @@
         <tr>
             <td><?= $char->getId() ?></td>
             <td><?= htmlspecialchars($char->getNom()) ?></td>
-            <td><?= $char->PV ?></td>
-            <td><?= $char->PVMax ?></td>
-            <td><?= $char->force ?></td>
-            <td><?= $char->facesDe ?></td>
-            <td><?= $char->chance ?></td>
-            <td><?= $char->XP ?></td>
-            <td><?= $char->money ?></td>
-            <td><?= $char->avatar ?></td>
+            <td><?= $char->getPV() ?></td>
+            <td><?= $char->getPVMax() ?></td>
+            <td><?= $char->getForce() ?></td>
+            <td><?= $char->getFacesDe() ?></td>
+            <td><?= $char->getChance() ?></td>
+            <td><?= $char->getXP() ?></td>
+            <td><?= $char->getMoney() ?></td>
+            <td><?= $char->getAvatar() ?></td>
             <td>
                 <a href="/personnage/<?= $char->getId() ?>">Modifier</a>
-                <a href="/personnage/<?= $char->getId() ?>/delete" onclick="return confirm('Confirmer la suppression ?')">Supprimer</a>
+                <a class="deleteBtn" id="delete_<?=$char->getId()?>">Supprimer</a>
             </td>
         </tr>
     <?php endforeach; ?>

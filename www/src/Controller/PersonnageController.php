@@ -99,11 +99,11 @@ class PersonnageController
             if ($character) {
                 // Mise à jour
                 $character->setNom($data['name']);
-                $character->PV = $data['PV'];
-                $character->PVMax = $data['PVMax'];
-                $character->force = $data['force'];
-                $character->money = $data['money'];
-                $character->avatar = basename($data['avatar']); // On ne garde que le nom du fichier (le constructeur se chargera de mettre le chemin complet)
+                $character->setPV($data['PV']);
+                $character->setPVMax($data['PVMax']);
+                $character->setForce($data['force']);
+                $character->setMoney($data['money']);
+                $character->setAvatar(basename($data['avatar'])); // On ne garde que le nom du fichier (le constructeur se chargera de mettre le chemin complet)
 
                 $repository->update($character);
             } else {

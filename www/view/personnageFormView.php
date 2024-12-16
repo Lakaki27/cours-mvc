@@ -7,7 +7,7 @@
     <div>
         <label for="name" class="block text-gray-600 font-medium mb-1">Nom</label>
         <input type="text" id="name" name="name"
-            value="<?= $character->getNom() ?? '' ?>"
+            value="<?= isset($character) ? $character->getNom() : '' ?>"
             class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
     </div>
 
@@ -16,13 +16,13 @@
         <div>
             <label for="PV" class="block text-gray-600 font-medium mb-1">PV</label>
             <input type="number" id="PV" name="PV"
-                value="<?= $character->PV ?? '' ?>"
+                value="<?= isset($character) ? $character->getPV() : '' ?>"
                 class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
         </div>
         <div>
             <label for="PVMax" class="block text-gray-600 font-medium mb-1">PV Max</label>
             <input type="number" id="PVMax" name="PVMax"
-                value="<?= $character->PVMax ?? '' ?>"
+                value="<?= isset($character) ? $character->getPVMax() : '' ?>"
                 class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
         </div>
     </div>
@@ -31,7 +31,7 @@
     <div>
         <label for="force" class="block text-gray-600 font-medium mb-1">Force</label>
         <input type="number" id="force" name="force"
-            value="<?= $character->force ?? '' ?>"
+            value="<?= isset($character) ? $character->getForce() : '' ?>"
             class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
     </div>
 
@@ -39,7 +39,7 @@
     <div>
         <label for="money" class="block text-gray-600 font-medium mb-1">Argent</label>
         <input type="number" id="money" name="money"
-            value="<?= $character->money ?? '' ?>"
+            value="<?= isset($character) ? $character->getMoney() : '' ?>"
             class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
     </div>
 
@@ -47,7 +47,7 @@
     <div>
         <label for="avatar" class="block text-gray-600 font-medium mb-1">Avatar</label>
         <input type="text" id="avatar" name="avatar"
-            value="<?= $character->avatar ?? '' ?>"
+            value="<?= isset($character) ? $character->getAvatar() : '' ?>"
             class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none" required>
     </div>
 

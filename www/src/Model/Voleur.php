@@ -3,7 +3,7 @@
 // Dans la structure du projet, la classe est dans Personnage
 namespace App\Model;
 
-class Vampire extends Personnage
+class Voleur extends Personnage
 {
     public function __construct(
         string $nom,
@@ -13,14 +13,14 @@ class Vampire extends Personnage
         int $facesDe = 8,
         int $chance = 70,
         int $money = 100,
-        string $avatar = 'vampire.jpg',
+        string $avatar = 'mrcrab.png',
         int $XP = 0,
         int $level = 0,
         ?int $id = null
     ) {
         // Appel du constructeur parent avec les bons paramètres
         parent::__construct($nom, $PV, $PVMax, $force, $facesDe, $chance, $money, $avatar, $XP, $level, $id);
-        $this->classe = "Vampire";
+        $this->classe = "Voleur";
     }
 
     // Dynamique d'attaque différente pour les vampires : héritage
@@ -51,10 +51,10 @@ class Vampire extends Personnage
             $resultat .= "{$cible->getTitle()} perd {$this->getForce()} PV !\n";
             $cible->setPV($cible->getPV() - $this->getForce());
 
-            // On rajoute un vampirisation, pour la classe Vampire
-            $vampirisation = round(intval($this->getForce() / 3));
-            $this->setPV($this->getPV() + $vampirisation);
-            $resultat .= "{$this->getTitle()} récupère $vampirisation PV !\n";
+            $delta = max(floor($this->getForce() / 9), 1);
+            $cible->setForce($cible->getForce() - $delta);
+            $this->setForce($this->getForce() + $delta);
+            $resultat .= "{$this->getTitle()} sape {$delta} force à {$cible->getTitle()} ! \n";
         }
 
         return $resultat;

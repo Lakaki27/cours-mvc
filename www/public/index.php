@@ -52,9 +52,12 @@ if (!empty($segments)) {
             // Vérifie si un second segment (ID) est présent.
             $personnageController = new PersonnageController();
             if (isset($segments[1])) {
-                // On affiche le formulaire pour éditer un personnage en appelant son contrôleur :
-                $personnageController->createOrEdit(intval($segments[1]));
-                // On pourrait aussi séparer la logique pour afficher un personnage par son ID sans formulaire
+                if (isset($segments[2])) {
+                    if ($segments[2] === "delete") $personnageController->delete($segments[1]);
+                } else {
+                    // On affiche le formulaire pour éditer un personnage en appelant son contrôleur :
+                    $personnageController->createOrEdit(intval($segments[1]));
+                }
             } else {
                 // S'il n'y a pas de second segment, affiche simplement une liste des bagarres.
                 // Pour l'instant, on va lancer une bagarre entre Bob l'éponge et Dracula en appelant BagarreController :

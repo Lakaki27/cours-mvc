@@ -4,16 +4,20 @@ namespace App\Model;
 
 class Personnage
 {
+    private const XP_BASE = 10;
+    private const XP_FACTOR = 1.26;
+
     protected ?int $id; // ID peut être null
     protected string $nom;
-    public int $PV;
-    public int $PVMax;
-    public int $force;
-    public int $facesDe;
-    public int $chance;
-    public int $XP = 0;
-    public int $money;
-    public string $avatar;
+    private int $PV;
+    private int $PVMax;
+    private int $force;
+    private int $facesDe;
+    private int $chance;
+    private int $XP = 0;
+    private int $money;
+    private int $level = 0;
+    private string $avatar;
     protected string $classe;
 
     public function __construct(
@@ -26,6 +30,7 @@ class Personnage
         int $money = 100,
         string $avatar = 'avatar.jpg',
         int $XP = 0,
+        int $level = 0,
         ?int $id = null
     ) {
         $this->id = $id;
@@ -39,66 +44,56 @@ class Personnage
         $this->avatar = "/img/$avatar";
         $this->classe = "Personnage";
         $this->XP = $XP;
+        $this->level = $level;
     }
 
     public function isAlive()
     {
-        return $this->PV > 0;
-    }
-
-    // Commencez à typer les propriétés pour éviter les erreurs
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
-    public function getNom(): string
-    {
-        return strtoupper($this->nom);
-    }
-
-    public function setNom(string $nom): void
-    {
-        $this->nom = trim($nom);
-    }
-
-    public function getXp()
-    {
-        return $this->XP;
+        return $this->getPV() > 0;
     }
 
     public function gagnerXP($XP)
     {
-        $this->XP += $XP;
+        $this->setXP($this->getXP() + $XP);
+        return $this->levelUp();
     }
 
-    public function levelUp()
+    public function gagnerMoney($money)
     {
-        // A IMPLEMENTER
+        $this->setMoney($this->getMoney() + $money);
     }
 
-    public function getClasse()
+    private function levelUp(): int
     {
-        return $this->classe;
+        $gainedLevels = 0;
+        while ($this->getXP() >= $this->getXPForLevelUp()) {
+            $gainedLevels++;
+            $this->setXP($this->getXP() - $this->getXPForLevelUp());
+        }
+
+        $this->setLevel($this->getLevel() + $gainedLevels);
+        return $gainedLevels;
+    }
+
+    public function getXPForLevelUp(int|null $level = null)
+    {
+        $level = is_null($level) ? $this->getLevel() : $level;
+
+        return ceil(self::XP_BASE * pow(self::XP_FACTOR, $level));
     }
 
     public function attaquer(Personnage $cible)
     {
 
         // On lance le dé
-        $scoreDe = rand(1, $this->facesDe);
+        $scoreDe = rand(1, $this->getFacesDe());
 
-        $resultat = "$this->nom lance son dé à $this->facesDe faces et obtient $scoreDe\n";
+        $resultat = "{$this->getTitle()} lance son dé à {$this->getFacesDe()} faces et obtient $scoreDe\n";
 
         // On ramène à une chiffre entre 0 et 1
-        $factDe = $scoreDe / $this->facesDe;
+        $factDe = $scoreDe / $this->getFacesDe();
         // On ajoute la chance
-        $factChance = $this->chance / 100;
+        $factChance = $this->getChance() / 100;
         // On fait une moyenne entre le dé et la chance
         $chanceFinale = ($factDe + $factChance) / 2;
 
@@ -106,20 +101,240 @@ class Personnage
         $success = $chanceFinale > 0.5;
 
         if (!$success) {
-            $resultat .= "$this->nom rate son attaque !\n";
+            $resultat .= "{$this->getTitle()} rate son attaque !\n";
             return $resultat;
         } else {
-            $resultat .= "$this->nom attaque $cible->nom! GRAOUUUU !\n";
-            $resultat .= "$cible->nom perd $this->force PV !\n";
-            $cible->PV -= $this->force;
-            $resultat .= "$cible->nom a maintenant $cible->PV PV restants !\n";
+            $resultat .= "{$this->getTitle()} attaque {$cible->getTitle()}! GRAOUUUU !\n";
+            $resultat .= "{$cible->getTitle()} perd {$this->getForce()} PV !\n";
+            $cible->setPV($cible->getPV() - $this->getForce());
         }
 
         return $resultat;
     }
 
-    function ressurect()
+    function resurrect()
     {
         $this->PV = $this->PVMax;
+    }
+
+    /**
+     * Get the value of id
+     */
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    /**
+     * Set the value of id
+     */
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of nom
+     */
+    public function getNom(): string
+    {
+        return $this->nom;
+    }
+
+    public function getTitle(): string
+    {
+        return "{$this->getNom()} le {$this->getClasse()}";
+    }
+
+    /**
+     * Set the value of nom
+     */
+    public function setNom(string $nom): self
+    {
+        $this->nom = $nom;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of PV
+     */
+    public function getPV(): int
+    {
+        return $this->PV;
+    }
+
+    /**
+     * Set the value of PV
+     */
+    public function setPV(int $PV): self
+    {
+        $this->PV = $PV;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of PVMax
+     */
+    public function getPVMax(): int
+    {
+        return $this->PVMax;
+    }
+
+    /**
+     * Set the value of PVMax
+     */
+    public function setPVMax(int $PVMax): self
+    {
+        $this->PVMax = $PVMax;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of force
+     */
+    public function getForce(): int
+    {
+        return $this->force;
+    }
+
+    /**
+     * Set the value of force
+     */
+    public function setForce(int $force): self
+    {
+        $this->force = $force;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of facesDe
+     */
+    public function getFacesDe(): int
+    {
+        return $this->facesDe;
+    }
+
+    /**
+     * Set the value of facesDe
+     */
+    public function setFacesDe(int $facesDe): self
+    {
+        $this->facesDe = $facesDe;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of chance
+     */
+    public function getChance(): int
+    {
+        return $this->chance;
+    }
+
+    /**
+     * Set the value of chance
+     */
+    public function setChance(int $chance): self
+    {
+        $this->chance = $chance;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of XP
+     */
+    public function getXP(): int
+    {
+        return $this->XP;
+    }
+
+    /**
+     * Set the value of XP
+     */
+    public function setXP(int $XP): self
+    {
+        $this->XP = ceil($XP);
+
+        return $this;
+    }
+
+    /**
+     * Get the value of money
+     */
+    public function getMoney(): int
+    {
+        return $this->money;
+    }
+
+    /**
+     * Set the value of money
+     */
+    public function setMoney(int $money): self
+    {
+        $this->money = $money;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of avatar
+     */
+    public function getAvatar(): string
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * Set the value of avatar
+     */
+    public function setAvatar(string $avatar): self
+    {
+        $this->avatar = $avatar;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of classe
+     */
+    public function getClasse(): string
+    {
+        return $this->classe;
+    }
+
+    /**
+     * Set the value of classe
+     */
+    public function setClasse(string $classe): self
+    {
+        $this->classe = $classe;
+
+        return $this;
+    }
+
+    /**
+     * Get the value of level
+     */
+    public function getLevel(): int
+    {
+        return $this->level;
+    }
+
+    /**
+     * Set the value of level
+     */
+    public function setLevel(int $level): self
+    {
+        $this->level = $level;
+
+        return $this;
     }
 }

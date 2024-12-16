@@ -2,10 +2,11 @@
 
 namespace App\Repository;
 
-use App\Model\Personnage;
-use App\Model\Vampire;
 use App\Model\Database;
 use PDO;
+use App\Model\Voleur;
+use App\Model\Vampire;
+use App\Model\Personnage;
 
 class PersonnageRepository
 {
@@ -41,6 +42,20 @@ class PersonnageRepository
                 intval($row['mny']),               // Money
                 $row['avatar'],                    // Avatar
                 intval($row['XP']),                // XP
+                intval($row['level']),             // Level
+                intval($row['id'])                 // ID
+            ),
+            'Voleur' => new Voleur(
+                $row['name'],                      // Nom
+                intval($row['PV']),                // PV
+                intval($row['PVMax']),             // PVMax
+                intval($row['str']),               // Force
+                intval($row['facesDe']),           // FacesDe
+                intval($row['chance']),            // Chance
+                intval($row['mny']),               // Money
+                $row['avatar'],                    // Avatar
+                intval($row['XP']),                // XP
+                intval($row['level']),             // Level
                 intval($row['id'])                 // ID
             ),
             default => new Personnage(
@@ -53,6 +68,7 @@ class PersonnageRepository
                 intval($row['mny']),               // Money
                 $row['avatar'],                    // Avatar
                 intval($row['XP']),                // XP
+                intval($row['level']),             // Level
                 intval($row['id'])                 // ID
             )
         };
@@ -95,21 +111,22 @@ class PersonnageRepository
     public function add(Personnage $character): Personnage
     {
         $stmt = $this->pdo->prepare("
-            INSERT INTO characters (name, PV, PVMax, str, facesDe, chance, XP, avatar, class, mny)
-            VALUES (:name, :PV, :PVMax, :force, :facesDe, :chance, :XP, :avatar, :class, :money)
+            INSERT INTO characters (name, PV, PVMax, str, facesDe, chance, XP, level, avatar, class, mny)
+            VALUES (:name, :PV, :PVMax, :force, :facesDe, :chance, :XP, :level, :avatar, :class, :money)
         ");
 
         $stmt->execute([
-            ':name' => $character->nom,
-            ':PV' => $character->PV,
-            ':PVMax' => $character->PVMax,
-            ':force' => $character->force,
-            ':facesDe' => $character->facesDe,
-            ':chance' => $character->chance,
+            ':name' => $character->getNom(),
+            ':PV' => $character->getPV(),
+            ':PVMax' => $character->getPVMax(),
+            ':force' => $character->getForce(),
+            ':facesDe' => $character->getFacesDe(),
+            ':chance' => $character->getChance(),
             ':XP' => 0,
-            ':avatar' => $character->avatar,
+            ':level' => 0,
+            ':avatar' => substr($character->getAvatar(), 5),
             ':class' => $character->getClasse(),
-            ':money' => $character->money
+            ':money' => $character->getMoney()
         ]);
 
         // Mettre à jour l'ID de l'instance après l'insertion
@@ -126,7 +143,8 @@ class PersonnageRepository
      */
     public function delete(int $id): void
     {
-        // Implémenter
+        $stmt = $this->pdo->prepare("DELETE FROM characters WHERE id = :id");
+        $stmt->execute([':id' => $id]);
     }
 
     public function update(Personnage $character): void
@@ -136,10 +154,11 @@ class PersonnageRepository
             SET name = :name,
                 PV = :PV,
                 PVMax = :PVMax,
-                str = :str,
+                str = :force,
                 facesDe = :facesDe,
                 chance = :chance,
                 XP = :XP,
+                level = :level,
                 avatar = :avatar,
                 class = :class,
                 mny = :mny
@@ -148,16 +167,41 @@ class PersonnageRepository
 
         $stmt->execute([
             ':name' => $character->getNom(),
-            ':PV' => $character->PV,
-            ':PVMax' => $character->PVMax,
-            ':str' => $character->force,
-            ':facesDe' => $character->facesDe,
-            ':chance' => $character->chance,
-            ':XP' => $character->XP,
-            ':avatar' => $character->avatar,
+            ':PV' => $character->getPV(),
+            ':PVMax' => $character->getPVMax(),
+            ':force' => $character->getForce(),
+            ':facesDe' => $character->getFacesDe(),
+            ':chance' => $character->getChance(),
+            ':XP' => $character->getXP(),
+            ':level' => $character->getLevel(),
+            ':avatar' => $character->getAvatar(),
             ':class' => $character->getClasse(),
-            ':mny' => $character->money,
+            ':mny' => $character->getMoney(),
             ':id' => $character->getId()
         ]);
+    }
+
+    public function updateAfterVictory(Personnage $character): void
+    {
+        $stmt = $this->pdo->prepare("
+            UPDATE characters
+            SET XP = :XP,
+                level = :level,
+                mny = :mny
+            WHERE id = :id
+        ");
+
+        $stmt->execute([
+            ':XP' => $character->getXP(),
+            ':level' => $character->getLevel(),
+            ':mny' => $character->getMoney(),
+            ':id' => $character->getId()
+        ]);
+    }
+
+    public function updateLevelAndXP(Personnage $character): void
+    {
+        $stmt = $this->pdo->prepare("UPDATE characters SET XP = :xp, level = :level WHERE id = :id");
+        $stmt->execute([':id' => $character->getId(), ':XP' => $character->getXP(), ':level' => $character->getLevel()]);
     }
 }

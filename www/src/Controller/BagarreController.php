@@ -7,6 +7,13 @@ use App\Repository\PersonnageRepository;
 
 class BagarreController
 {
+    private ?PersonnageRepository $pr = null;
+
+    public function __construct()
+    {
+        $this->pr = new PersonnageRepository;
+    }
+
     public function afficherBagarre()
     {
         // Récupération des paramètres a (ID perso 1) et b (ID perso 2) depuis l'URL
@@ -19,17 +26,17 @@ class BagarreController
             return;
         }
 
-        $pr = new PersonnageRepository();
-
         // Récupère les deux personnages depuis la base
-        $personnageA = $pr->getById((int)$idA);
-        $personnageB = $pr->getById((int)$idB);
+
+        $personnageA = $this->pr->getById((int)$idA);
+        $personnageB = $this->pr->getById((int)$idB);
 
         // Vérifie que les personnages existent
         if (!$personnageA || !$personnageB) {
             die("L'un des personnages n'existe pas.");
             return;
         }
+
         // Utiliser le moteur de rendu
         $moteur = new MoteurDeRendu();
 
@@ -82,18 +89,35 @@ class BagarreController
             }
 
             $resultat .= "\n";
+            $resultat .= "{$combattants[0]->getNom()}: {$combattants[0]->getPV()} PV, {$combattants[1]->getNom()}: {$combattants[1]->getPV()} PV\n";
+            $resultat .= "\n";
         }
 
+        $winner = null;
         // Déterminer le vainqueur
         if (!$combattants[0]->isAlive()) {
-            $combattants[1]->gagnerXP(10);
-            $resultat .= "{$combattants[1]->getNom()} a gagné ! Il a maintenant {$combattants[1]->getXP()} XP (+10)\n";
+            $winner = $combattants[1];
         } else {
-            $combattants[0]->gagnerXP(10);
-            $resultat .= "{$combattants[0]->getNom()} a gagné ! Il a maintenant {$combattants[0]->getXP()} XP (+10)\n";
+            $winner = $combattants[0];
         }
+        $gainedLevels = $winner->gagnerXP(17);
+        $gainedLevels = $winner->gagnerMoney(35);
+
+        $this->pr->updateAfterVictory($combattants[0]);
+        $this->pr->updateAfterVictory($combattants[1]);
+
+        $resultat .= "{$winner->getTitle()} a gagné ! (+17 XP)\n";
 
         $resultat .= "----------------------------------------------------------------------\n";
+
+        $resultat .= "{$winner->getTitle()} remporte 35 pièces !";
+
+        if ($gainedLevels > 0) {
+            $resultat .= "{$winner->getTitle()} gagne {$gainedLevels} niveau(x) ! Il évolue au niveau {$winner->getLevel()} !\n";
+        }
+
+        $resultat .= "XP: {$winner->getXP()}/{$winner->getXPForLevelUp()}";
+
 
         return $resultat;
     }
