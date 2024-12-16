@@ -1,0 +1,11 @@
+RewriteEngine On
+
+# Si ce n'est ni un fichier ni un dossier existant, on redirige vers index.php
+# Comme ça, on peut accéder à des fichiers statiques (genre des images) sans passer par index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# - `^(.*)$` : On capture tout ce qui vient après la racine et on le passe en paramètre `page`.
+# - `[QSA]` : Query String Append : Garde les paramètres de la requête d'origine (genre `?truc=valeur`).
+# - `[L]` : Stoppe ici, plus de réécritures après ça.
+RewriteRule ^(.*)$ index.php?page=$1 [QSA,L]
