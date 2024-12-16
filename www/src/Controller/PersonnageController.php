@@ -69,15 +69,13 @@ class PersonnageController
      *
      * @param int|null $id
      */
-    public function createOrEdit(?int $id = null)
+    public function edit(?int $id = null)
     {
-        $repository = new PersonnageRepository();
-
         // Vérifie si on est en mode édition
         $character = null;
         if ($id) {
             // Si un ID est fourni, on tente de récupérer le personnage correspondant
-            $character = $repository->getById($id);
+            $character = $this->repository->getById($id);
             if (!$character) {
                 // Si le personnage n'existe pas, on redirige vers la page d'accueil (on pourrait aussi afficher un message d'erreur)
                 header("Location: /");
@@ -87,39 +85,16 @@ class PersonnageController
 
         // Si la méthode est post, on traite le formulaire qui a été soumis
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Mise à jour
             $data = [
                 'name' => $_POST['name'],
-                'PV' => intval($_POST['PV']),
-                'PVMax' => intval($_POST['PVMax']),
-                'force' => intval($_POST['force']),
-                'money' => intval($_POST['money']),
-                'avatar' => $_POST['avatar'],
+                'avatar' => $_POST['avatar']
             ];
+            $character->setNom($data['name']);
+            $character->setAvatar(basename($data['avatar'])); // On ne garde que le nom du fichier (le constructeur se chargera de mettre le chemin complet)
 
-            if ($character) {
-                // Mise à jour
-                $character->setNom($data['name']);
-                $character->setPV($data['PV']);
-                $character->setPVMax($data['PVMax']);
-                $character->setForce($data['force']);
-                $character->setMoney($data['money']);
-                $character->setAvatar(basename($data['avatar'])); // On ne garde que le nom du fichier (le constructeur se chargera de mettre le chemin complet)
-
-                $repository->update($character);
-            } else {
-                // Création
-                $newCharacter = new Personnage(
-                    $data['name'],
-                    $data['PV'],
-                    $data['PVMax'],
-                    $data['force'],
-                    6, // facesDe par défaut
-                    50, // chance par défaut
-                    $data['money'],
-                    basename($data['avatar']) // On ne garde que le nom du fichier (pareil ci-dessus)
-                );
-                $repository->add($newCharacter);
-            }
+            $this->repository->update($character);
+            // Création
 
             header("Location: /personnage");
             exit();
@@ -129,6 +104,44 @@ class PersonnageController
         $form = $this->moteur->render('personnageFormView', [
             'character' => $character
         ]);
+
+        echo $this->moteur->render('indexView', [
+            'contenu' => $form,
+            'header' => $this->moteur->render('headerView'),
+            'footer' => $this->moteur->render('footerView')
+        ]);
+    }
+
+    public function create()
+    {
+        $character = null;
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = [
+                'name' => $_POST['name'],
+                'PVMax' => intval($_POST["PVMax"]),
+                'force' => intval($_POST["force"]),
+                'avatar' => $_POST['avatar']
+            ];
+            
+            $character = new Personnage(
+                $data['name'],
+                $data['PVMax'], //PVs par défaut = PVMax
+                $data['PVMax'],
+                $data['force'],
+                6, // facesDe par défaut
+                50, // chance par défaut
+                0, //money par défaut
+                basename($data['avatar']) // On ne garde que le nom du fichier (pareil ci-dessus)
+            );
+
+            $this->repository->add($character);
+
+            header("Location: /personnage");
+            exit();
+        }
+
+        $form = $this->moteur->render('newPersonnageFormView', []);
 
         echo $this->moteur->render('indexView', [
             'contenu' => $form,

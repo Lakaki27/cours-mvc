@@ -206,3 +206,27 @@ form button {
         gap: 10px;
     }
 }
+
+a:hover {
+    cursor: pointer !important;
+    text-decoration: underline !important;
+    color: #ff4757 !important;
+}
+
+a.a-btn {
+    background-color: #333;
+    color: white;
+    font-weight: bold;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    transition: all 0.3s ease-in-out;
+}
+
+a.a-btn:hover {
+    background-color: #ff4757;
+}
+
+a.a-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(38, 143, 255, 0.5);
+}

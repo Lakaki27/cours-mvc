@@ -55,12 +55,13 @@ if (!empty($segments)) {
                 if (isset($segments[2])) {
                     if ($segments[2] === "delete") $personnageController->delete($segments[1]);
                 } else {
-                    // On affiche le formulaire pour éditer un personnage en appelant son contrôleur :
-                    $personnageController->createOrEdit(intval($segments[1]));
+                    if ($segments[1] === "ajouter") {
+                        $personnageController->create(intval($segments[1]));
+                    } else {
+                        $personnageController->edit(intval($segments[1]));
+                    }
                 }
             } else {
-                // S'il n'y a pas de second segment, affiche simplement une liste des bagarres.
-                // Pour l'instant, on va lancer une bagarre entre Bob l'éponge et Dracula en appelant BagarreController :
                 $personnageController->index();
             }
             break;

@@ -60,7 +60,6 @@ class BagarreController
         ]);
     }
 
-
     private function bagarre($combattant1, $combattant2)
     {
         $resultat = "";
@@ -117,7 +116,6 @@ class BagarreController
         }
 
         $resultat .= "XP: {$winner->getXP()}/{$winner->getXPForLevelUp()}";
-
 
         return $resultat;
     }
