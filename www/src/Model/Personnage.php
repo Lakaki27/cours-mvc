@@ -64,6 +64,10 @@ class Personnage
         $this->setMoney($this->getMoney() + $money);
     }
 
+    /**
+     * Fonction permettant d'ajuster l'XP et le niveau d'un personnage après avoir gagné de l'XP.
+     * @return int Nombre de niveaux gagnés suite au rééquilibrage
+     */
     private function levelUp(): int
     {
         $gainedLevels = 0;
@@ -76,6 +80,12 @@ class Personnage
         return $gainedLevels;
     }
 
+    /**
+     * Méthode de calcul de l'XP nécessaire avant le prochain level up.
+     * Suite géométrique: chaque niveau requiert 1.26 fois plus d'XP que le précédent, commençant au niveau 0 avec x(0) = 10XP.
+     * @param int Un niveau précis pour le calcul de la formule géométrique, ou null pour le niveau actuel du personnage.
+     * @return int L'XP manquante avant le prochain level up.
+     */
     public function getXPForLevelUp(int|null $level = null)
     {
         $level = is_null($level) ? $this->getLevel() : $level;
