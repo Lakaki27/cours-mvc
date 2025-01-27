@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: php-container
+    container_name: php-container-fork-poo
     volumes:
       - ./www:/var/www/html
     ports:
@@ -15,7 +15,7 @@ services:
 
   mysql:
     image: mysql:8.0
-    container_name: mysql-container
+    container_name: mysql-container-fork-poo
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
       MYSQL_DATABASE: mydatabase
@@ -28,7 +28,7 @@ services:
 
   phpmyadmin:
     image: phpmyadmin:latest
-    container_name: phpmyadmin-container
+    container_name: phpmyadmin-container-fork-poo
     environment:
       PMA_HOST: mysql
       MYSQL_ROOT_PASSWORD: rootpassword

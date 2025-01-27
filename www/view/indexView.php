@@ -22,6 +22,8 @@
     <?= $footer ?>
 
     <script src="/js/index.js"></script>
+    <script src="/js/bagarre.js"></script>
+    <script src="/js/hall.js"></script>
 </body>
 
 </html>

@@ -31,7 +31,7 @@ class Personnage
         string $avatar = 'avatar.jpg',
         int $XP = 0,
         int $level = 0,
-        ?int $id = null,
+        int|null $id = null,
         string $classe = "Personnage"
     ) {
         $this->id = $id;
@@ -123,9 +123,16 @@ class Personnage
         return $resultat;
     }
 
-    function resurrect()
-    {
-        $this->PV = $this->PVMax;
+    public function wait() {
+        $sentences = [
+            "{$this->getNom()} est dans la lune, il passe son tour !",
+            "{$this->getNom()} décide d'être pacifiste et de ne pas attaquer !",
+            "{$this->getNom()} prend un traitement homéopathique ! (ça n'a aucun effet...)",
+            "Mais que fout {$this->getNom()} ? Il oublie son tour !",
+            "{$this->getNom()} est occupé à admirer ma femme et en oublie de faire une action !"
+        ];
+
+        return $sentences[array_rand($sentences, 1)] . "\n";
     }
 
     /**

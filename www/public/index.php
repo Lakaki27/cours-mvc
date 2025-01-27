@@ -6,6 +6,7 @@ require '../vendor/autoload.php';
 
 
 use App\Controller\BagarreController;
+use App\Controller\HallController;
 use App\Controller\PersonnageController;
 
 // L'index.php nous servira de routeur : c'est le point d'entrée de notre application :
@@ -66,15 +67,21 @@ if (!empty($segments)) {
             }
             break;
             // Cas où le premier segment de l'URL est 'bagarre'.
+        case "hall":
+            $hallController = new HallController();
+
+            $hallController->afficherHall();
+            break;
         case 'bagarre':
+            $bagarreController = new BagarreController();
             // Vérifie si un second segment (ID) est présent.
-            if (isset($segments[1])) {
+            if (isset($segments[1]) && $segments[1] === "move") {
                 // Affiche l'ID de la bagarre, en s'assurant que les caractères spéciaux sont convertis pour éviter les attaques XSS.
-                echo "Bagarre ID: " . htmlspecialchars($segments[1]);
+                echo json_encode($bagarreController->getNextTurn());
+                return;
             } else {
                 // S'il n'y a pas de second segment, affiche simplement une liste des bagarres.
                 // Pour l'instant, on va lancer une bagarre entre Bob l'éponge et Dracula en appelant BagarreController :
-                $bagarreController = new BagarreController();
                 $bagarreController->afficherBagarre();
             }
             break;
